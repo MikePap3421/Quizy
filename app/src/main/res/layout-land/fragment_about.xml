@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="34dp"
+    android:background="?attr/colorSurface">
+
+    <!-- Title -->
+
+    <!-- Scrollable Description -->
+    <TextView
+        android:id="@+id/aboutTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="ABOUT"
+        android:textColor="?attr/colorOnSurface"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ScrollView
+        android:id="@+id/aboutScrollView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="20dp"
+        android:fillViewport="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/aboutTitle"
+        android:layout_marginEnd="30dp"
+        android:layout_marginStart="30dp">
+
+        <TextView
+            android:id="@+id/aboutContent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="start"
+            android:lineSpacingExtra="6dp"
+            android:paddingBottom="10dp"
+            android:text="This is a Quiz Game App developed as a project for the course 'Mobile Device Programming' in the third year at the Department of Computer Science and Electronic Systems Engineering at the International Hellenic University.\n\nIn this app, the user is supposed to answer some questions in order to get points. At first, they need to create an account and log in. After logging in, they have to choose the categories of questions they will answer, depending on their knowledge.\n\nOnce the quiz finishes, the points are automatically updated, and the user can see their performance on the Leaderboard, as well as the performance of other users.\n\nThis app has been written by Papageorgiou Mixail, who was born on July 3rd, 2004, in Athens, Greece. The software used for the development of this program is Android Studio, and the questions were taken from various free websites.\n\n\Thanks for playing!"
+            android:textColor="?attr/colorOnSurface"
+            android:textSize="20sp" />
+    </ScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>

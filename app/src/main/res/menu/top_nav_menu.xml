@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/HomeView"
+        android:title="Home"
+        android:icon="@drawable/baseline_cottage_24"
+        app:titleTextAppearance="@style/Widget.Material3.DrawerLayout"/>
+    <item
+        android:id="@+id/Profileview"
+        android:title="Profile"
+        android:icon="@drawable/baseline_account_circle_24"
+        app:titleTextAppearance="@style/Widget.Material3.DrawerLayout"/>
+    <item
+        android:id="@+id/statsView"
+        android:title="Leaderboard"
+        android:icon="@drawable/baseline_bar_chart_24"
+        app:titleTextAppearance="@style/Widget.Material3.DrawerLayout"/>
+    <item
+        android:id="@+id/Aboutview"
+        android:title="About"
+        android:icon="@drawable/baseline_info_24"
+        app:titleTextAppearance="@style/Widget.Material3.DrawerLayout"/>
+    <item
+        android:id="@+id/LogOutview"
+        android:title="Log Out"
+        android:icon="@drawable/baseline_logout_24"
+        app:titleTextAppearance="@style/Widget.Material3.DrawerLayout"/>
+</menu>
