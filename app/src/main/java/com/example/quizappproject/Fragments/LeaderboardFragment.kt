@@ -15,14 +15,11 @@ import com.google.firebase.firestore.Query
 class LeaderboardFragment : Fragment() {
 
     private lateinit var recyclerView: RecyclerView
-    private lateinit var adapter: LeaderboardAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_leaderboard, container, false)
-    }
+    ): View? = inflater.inflate(R.layout.fragment_leaderboard, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -34,20 +31,20 @@ class LeaderboardFragment : Fragment() {
     }
 
     private fun fetchLeaderboardData() {
-        val db = FirebaseFirestore.getInstance()
-        db.collection("leaderboard")
+        FirebaseFirestore.getInstance()
+            .collection("leaderboard")
             .orderBy("totalPoints", Query.Direction.DESCENDING)
             .get()
             .addOnSuccessListener { result ->
-                val leaderboard = result.map { doc ->
-                    doc.toObject(LeaderboardEntry::class.java)
-                }
-
-                adapter = LeaderboardAdapter(leaderboard)
-                recyclerView.adapter = adapter
+                val leaderboard = result.mapNotNull { it.toObject(LeaderboardEntry::class.java) }
+                recyclerView.adapter = LeaderboardAdapter(leaderboard)
             }
             .addOnFailureListener { e ->
-                Toast.makeText(requireContext(), "Failed to load leaderboard: ${e.message}", Toast.LENGTH_LONG).show()
+                Toast.makeText(
+                    requireContext(),
+                    "Failed to load leaderboard: ${e.message}",
+                    Toast.LENGTH_LONG
+                ).show()
             }
     }
 }

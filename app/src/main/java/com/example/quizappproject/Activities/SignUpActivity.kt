@@ -22,10 +22,11 @@ class SignUpActivity : AppCompatActivity() {
 
     private lateinit var userViewModel: UserViewModel
 
-    private fun saveUserSession(email: String) {
+    private fun saveUserSession(email: String, userId: String) {
         val sharedPref = getSharedPreferences("user_session", MODE_PRIVATE)
         with(sharedPref.edit()) {
             putString("USER_EMAIL", email)
+            putString("USER_ID", userId)
             apply()
         }
     }
@@ -71,10 +72,11 @@ class SignUpActivity : AppCompatActivity() {
 
             lifecycleScope.launch {
                 val existingUser = userViewModel.getUserByEmail(email)
+                val foundUser = userViewModel.getUserByEmail(existingUser.toString().trim())
                 if (existingUser == null) {
                     val newUser = UserEntity(name = name, email = email, points = 0)
                     userViewModel.insertUser(newUser)
-                    saveUserSession(email)
+                    saveUserSession(email, foundUser?.id.toString())
 
                     runOnUiThread {
                         val sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE)

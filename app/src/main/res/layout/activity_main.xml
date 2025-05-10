@@ -105,17 +105,17 @@
         android:layout_marginEnd="46dp"
         android:hint="Email"
         android:textColorHint="?attr/colorOutline"
-        app:startIconTint="?attr/colorOutline"
-        app:counterTextColor="?attr/colorOnSurfaceVariant"
         app:counterEnabled="true"
         app:counterMaxLength="30"
+        app:counterTextColor="?attr/colorOnSurfaceVariant"
         app:helperText="Required*"
         app:helperTextTextColor="?attr/colorError"
-        app:startIconDrawable="@drawable/baseline_alternate_email_24"
         app:layout_constraintBottom_toTopOf="@+id/btMain"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textInputLayout">
+        app:layout_constraintTop_toBottomOf="@+id/usernameLayout"
+        app:startIconDrawable="@drawable/baseline_alternate_email_24"
+        app:startIconTint="?attr/colorOutline">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/tvEmail"

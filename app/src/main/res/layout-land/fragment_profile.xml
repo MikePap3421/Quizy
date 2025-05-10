@@ -8,6 +8,18 @@
     tools:context=".fragments.ProfileFragment"
     android:background="?attr/colorSurfaceContainer">
 
+    <ImageView
+        android:id="@+id/SettingsView"
+        android:layout_width="41dp"
+        android:layout_height="46dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.013"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
+        app:srcCompat="@drawable/baseline_brightness_low_24" />
+
     <TextView
         android:id="@+id/userIcon"
         android:layout_width="130dp"

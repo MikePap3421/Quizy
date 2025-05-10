@@ -37,10 +37,11 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var userViewModel: UserViewModel
 
-    private fun saveUserSession(email: String) {
+    private fun saveUserSession(email: String, userId: String) {
         val sharedPref = getSharedPreferences("user_session", MODE_PRIVATE)
         with(sharedPref.edit()) {
             putString("USER_EMAIL", email)
+            putString("USER_ID", userId)
             apply()
         }
     }
@@ -106,7 +107,7 @@ class MainActivity : AppCompatActivity() {
                     val foundUser = userViewModel.getUserByEmail(enteredEmail)
 
                     if (foundUser != null && foundUser.name == enteredName) {
-                        saveUserSession(enteredEmail)
+                        saveUserSession(enteredEmail, foundUser.id.toString())
                         startActivity(Intent(this@MainActivity, SecondActivity::class.java))
                         finish()
                     } else {

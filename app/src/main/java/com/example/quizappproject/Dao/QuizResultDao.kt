@@ -20,4 +20,8 @@ interface QuizResultDao {
 
     @Query("""SELECT categoryName, AVG(score) as avgScore FROM quiz_results WHERE userEmail = :email GROUP BY categoryName""")
     suspend fun getAverageScoresByCategory(email: String): List<CategoryAverage>
+
+    @Query("SELECT * FROM quiz_results WHERE userEmail = :email ")
+    suspend fun getResultsForUser(email: String): List<QuizResult>
+
 }
