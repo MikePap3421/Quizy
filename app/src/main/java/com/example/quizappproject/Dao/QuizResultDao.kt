@@ -15,13 +15,15 @@ interface QuizResultDao {
     @Insert
     suspend fun insertResult(result: QuizResult)
 
-    @Query("SELECT * FROM quiz_results WHERE userEmail = :email")
-    suspend fun getResultsByUser(email: String): List<QuizResult>
+    @Query("SELECT * FROM quiz_results WHERE userId = :userId")
+    fun getResultsByUser(userId: Int): List<QuizResult>
 
-    @Query("""SELECT categoryName, AVG(score) as avgScore FROM quiz_results WHERE userEmail = :email GROUP BY categoryName""")
-    suspend fun getAverageScoresByCategory(email: String): List<CategoryAverage>
+    @Query("""SELECT categoryName, AVG(score) as avgScore FROM quiz_results WHERE userId = :userId GROUP BY categoryName""")
+    suspend fun getAverageScoresByCategory(userId: Int): List<CategoryAverage>
 
-    @Query("SELECT * FROM quiz_results WHERE userEmail = :email ")
-    suspend fun getResultsForUser(email: String): List<QuizResult>
+
+    @Query("SELECT * FROM quiz_results WHERE userId = :userId")
+    suspend fun getResultsForUser(userId: Int): List<QuizResult>
+
 
 }

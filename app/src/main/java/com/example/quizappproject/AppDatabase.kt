@@ -16,7 +16,7 @@ import com.example.quizappproject.Entities.*
         QuizResult::class
 
     ],
-    version = 5,
+    version = 9,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {

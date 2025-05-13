@@ -59,13 +59,15 @@ class ChaseFragment : Fragment() {
     }
 
     private fun fetchRivalsData() {
-        val currentUserId = sharedPreferences.getString("USER_ID", null) ?: run {
-            Toast.makeText(requireContext(), "User not identified", Toast.LENGTH_SHORT).show()
+        val currentUserEmail = sharedPreferences.getString("USER_EMAIL", null) ?: run {
+            Toast.makeText(requireContext(), "User email not found", Toast.LENGTH_SHORT).show()
             return
         }
-        UserName.text="You"
+
+        UserName.text = "You"
+
         db.collection("leaderboard")
-            .whereEqualTo("userId", currentUserId)
+            .whereEqualTo("email", currentUserEmail)
             .limit(1)
             .get()
             .addOnSuccessListener { querySnapshot ->
@@ -81,9 +83,8 @@ class ChaseFragment : Fragment() {
             .addOnFailureListener { e ->
                 Toast.makeText(requireContext(), "Failed to load your score: ${e.message}", Toast.LENGTH_LONG).show()
             }
-
-
     }
+
 
     private fun findHigherRival(currentUserScore: Long) {
         db.collection("leaderboard")

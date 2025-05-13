@@ -9,6 +9,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.*
 import android.widget.Button
+import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -55,7 +56,6 @@ class SettingsFragment : Fragment() {
                                     if (document.exists()) {
                                         leaderboardRef.delete()
                                             .addOnSuccessListener {
-                                                // Optional: show a toast or log
                                             }
                                             .addOnFailureListener {
                                                 Toast.makeText(requireContext(), "Failed to delete leaderboard entry", Toast.LENGTH_SHORT).show()
@@ -82,14 +82,18 @@ class SettingsFragment : Fragment() {
 
         btnEdit.setOnClickListener {
             val newName = editNameInput.text.toString().trim()
-            if (!newName.matches(Regex("^[a-zA-Z0-9 ]{1,12}$"))) {
-                editNameInput.error = "Invalid name (only letters, numbers, max 20 chars)"
-                return@setOnClickListener
-            }
+            val textInputLayout = view.findViewById<com.google.android.material.textfield.TextInputLayout>(R.id.textInputLayoutEditName)
+
             if (newName.isEmpty()) {
-                editNameInput.error = "Name cannot be empty"
+                textInputLayout.error = "Name cannot be empty"
                 return@setOnClickListener
+            } else if (!newName.matches(Regex("^[a-zA-Z0-9 ]{1,12}$"))) {
+                textInputLayout.error = "Invalid name (letters, numbers, max 12 chars)"
+                return@setOnClickListener
+            } else {
+                textInputLayout.error = null
             }
+
 
             if (email != null) {
                 lifecycleScope.launch {
@@ -107,8 +111,16 @@ class SettingsFragment : Fragment() {
                         sharedPrefs.edit().putString("USERNAME_KEY", newName).apply()
 
                         (activity as? SecondActivity)?.updateDrawerHeaderName(newName)
-
-
+                        showNameChangeNotification(newName)
+                        (activity as? SecondActivity)?.updateDrawerHeaderName(newName)
+                        parentFragmentManager.beginTransaction()
+                            .setCustomAnimations(
+                                R.anim.enter_from_right,
+                                R.anim.exit_to_left
+                            )
+                            .replace(R.id.fragment_container, ProfileFragment())
+                            .addToBackStack(null)
+                            .commit()
                     }
                 }
             } else {
@@ -119,8 +131,8 @@ class SettingsFragment : Fragment() {
         backButton.setOnClickListener {
             parentFragmentManager.beginTransaction()
                 .setCustomAnimations(
-                    R.anim.enter_from_right,  // ProfileFragment enters from right
-                    R.anim.exit_to_left       // SettingsFragment exits to left
+                    R.anim.enter_from_right,
+                    R.anim.exit_to_left
                 )
                 .replace(R.id.fragment_container, ProfileFragment())
                 .addToBackStack(null)
@@ -140,9 +152,34 @@ class SettingsFragment : Fragment() {
             .addOnSuccessListener {
             }
             .addOnFailureListener {
-               //nothing
             }
     }
+    private fun showNameChangeNotification(newName: String) {
+        val notificationManager =
+            requireContext().getSystemService(Context.NOTIFICATION_SERVICE) as android.app.NotificationManager
+
+        val channelId = "name_update_channel"
+        val channelName = "Name Updates"
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            val channel = android.app.NotificationChannel(
+                channelId,
+                channelName,
+                android.app.NotificationManager.IMPORTANCE_HIGH
+            )
+            notificationManager.createNotificationChannel(channel)
+        }
+
+        val notification = androidx.core.app.NotificationCompat.Builder(requireContext(), channelId)
+            .setSmallIcon(R.drawable.baseline_info_24)
+            .setContentTitle("Profile Updated")
+            .setContentText("Your name is now successfully changed to \"$newName\".")
+            .setPriority(androidx.core.app.NotificationCompat.PRIORITY_HIGH)
+            .build()
+
+        notificationManager.notify(1, notification)
+    }
+
 
 
 }

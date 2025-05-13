@@ -86,7 +86,7 @@ class SecondActivity : AppCompatActivity() {
         userIconTextView.setOnClickListener {
             navigateToMenuItem(R.id.Profileview)
         }
-
+        updateDrawerHeaderNameFromPrefs()
         updateUserInfo()
     }
 
@@ -183,15 +183,24 @@ class SecondActivity : AppCompatActivity() {
         }
     }
 
-    fun updateDrawerHeaderName(name: String) {
-        val headerView = navView.getHeaderView(0)
+    fun updateDrawerHeaderName(newName: String) {
+        val navView = findViewById<NavigationView>(R.id.top_nav_view)
+        val headerView = navView.getHeaderView(0) ?: return
+
         val tvUserName = headerView.findViewById<TextView>(R.id.textView5)
-        tvUserName.text = name
+        val userIconTextView = findViewById<TextView>(R.id.userIcon)
+
+        if (tvUserName != null && userIconTextView != null) {
+            tvUserName.text = newName
+            userIconTextView.text = newName.firstOrNull()?.uppercaseChar()?.toString() ?: "?"
+        }
     }
+
+
     private fun createNotificationChannel() {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            val name = "ChaseNotifications"
-            val descriptionText = "Notifications for chase access"
+            val name = "Profile Notifications"
+            val descriptionText = "Notifications for name changes"
             val importance = NotificationManager.IMPORTANCE_HIGH
             val channel = NotificationChannel("CHASE_CHANNEL_ID", name, importance).apply {
                 description = descriptionText
@@ -208,7 +217,7 @@ class SecondActivity : AppCompatActivity() {
             .setContentTitle("Chase Locked")
             .setContentText("Get at least one point to unlock the Chase feature.")
             .setPriority(NotificationCompat.PRIORITY_HIGH)
-            .setCategory(NotificationCompat.CATEGORY_MESSAGE) // Add this
+            .setCategory(NotificationCompat.CATEGORY_MESSAGE)
             .setDefaults(NotificationCompat.DEFAULT_ALL)
 
         val notificationManager = NotificationManagerCompat.from(this)
@@ -228,6 +237,14 @@ class SecondActivity : AppCompatActivity() {
         }
     }
 
+    fun updateDrawerHeaderNameFromPrefs() {
+        val sharedPrefs = getSharedPreferences("UserPrefs", MODE_PRIVATE)
+        val name = sharedPrefs.getString("USERNAME_KEY", "Guest")
+        val navView = findViewById<NavigationView>(R.id.top_nav_view)
+        val headerView = navView.getHeaderView(0)
+        val tvUserName = headerView.findViewById<TextView>(R.id.textView5)
+        tvUserName.text = name
+    }
 
 
 }

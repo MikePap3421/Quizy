@@ -14,6 +14,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.ViewModelProvider
@@ -56,6 +57,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        installSplashScreen()
         super.onCreate(savedInstanceState)
         checkUserSession()
         createNotificationChannel()
@@ -137,11 +139,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(
-                "quiz_reminder_channel",
-                "Quiz Reminders",
-                NotificationManager.IMPORTANCE_HIGH
-            ).apply {
+            val channel = NotificationChannel("quiz_reminder_channel", "Quiz Reminders", NotificationManager.IMPORTANCE_HIGH).apply {
                 description = "Channel for daily quiz reminder"
             }
 
@@ -164,8 +162,8 @@ class MainActivity : AppCompatActivity() {
             val questions: List<QuestionEntity> = gson.fromJson(questionsJson, questionsType)
 
             CoroutineScope(Dispatchers.IO).launch {
-                database.questionDao().insertQuestions(questions)
                 database.categoryDao().insertAll(categories)
+                database.questionDao().insertQuestions(questions)
                 prefs.edit().putBoolean("isQuestionsInserted", true).apply()
             }
         }

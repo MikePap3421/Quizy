@@ -18,7 +18,9 @@ import com.example.quizappproject.*
 import com.example.quizappproject.Entities.QuestionEntity
 import com.example.quizappproject.Entities.QuizResult
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class   QuestionFragment : Fragment() {
 
@@ -202,29 +204,46 @@ class   QuestionFragment : Fragment() {
             .getSharedPreferences("user_session", Context.MODE_PRIVATE)
             .getString("USER_EMAIL", null)
 
-        if (email != null) {
-            val quizResult = QuizResult(userEmail = email, categoryName = categoryName ?: "Unknown", score=currentScore)
-            lifecycleScope.launch {
-                val db = AppDatabase.getDatabase(requireContext())
-                db.quizResultDao().insertResult(quizResult)
+        if (email == null) {
+            Toast.makeText(requireContext(), "Email not found in session", Toast.LENGTH_SHORT).show()
+            return
+        }
 
-                val user = db.userDao().getUserByEmail(email)
-                if (user != null) {
+        lifecycleScope.launch {
+            val db = AppDatabase.getDatabase(requireContext())
+            val user = withContext(Dispatchers.IO) {
+                db.userDao().getUserByEmail(email)
+            }
+
+            if (user != null) {
+                val quizResult = QuizResult(
+                    userId = user.id,
+                    userEmail = email,
+                    categoryName = categoryName ?: "Unknown",
+                    score = currentScore
+                )
+
+                withContext(Dispatchers.IO) {
+                    db.quizResultDao().insertResult(quizResult)
                     user.points += currentScore
                     db.userDao().updateUser(user)
-                    (activity as? SecondActivity)?.updateUserInfo()
-                    updateLeaderboard(user.id.toString(), user.name, currentScore)
-
                 }
-            }
-        }
-        showQuizNotification(currentScore)
-        scheduleReminderNotification()
 
-        parentFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container, HomeFragment())
-            .commit()
+                (activity as? SecondActivity)?.updateUserInfo()
+                updateLeaderboard(user.id.toString(), user.name, email,currentScore)
+            } else {
+                Toast.makeText(requireContext(), "User not found", Toast.LENGTH_SHORT).show()
+            }
+
+            showQuizNotification(currentScore)
+            scheduleReminderNotification()
+
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, HomeFragment())
+                .commit()
+        }
     }
+
 
     private fun createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -304,7 +323,7 @@ class   QuestionFragment : Fragment() {
         }
     }
 
-    fun updateLeaderboard(userId: String, name: String, newPoints: Int) {
+    fun updateLeaderboard(userId: String, name: String,userEmail: String, newPoints: Int) {
         val db = FirebaseFirestore.getInstance()
         val leaderboardRef = db.collection("leaderboard").document(userId)
 
@@ -313,6 +332,7 @@ class   QuestionFragment : Fragment() {
             val updatedEntry = LeaderboardEntry(
                 userId = userId,
                 name = name,
+                email = userEmail,
                 totalPoints = currentPoints.toInt() + newPoints,
                 lastUpdated = System.currentTimeMillis()
             )

@@ -74,7 +74,7 @@ class ProfileFragment : Fragment() {
                 categoryDao.getAllCategories().map { Category(it.name, it.imageResId) }
             }
             val averagesMap = withContext(Dispatchers.IO) {
-                resultDao.getAverageScoresByCategory(email).associate { it.categoryName to it.avgScore }
+                resultDao.getAverageScoresByCategory(user?.id ?: -1).associate { it.categoryName to it.avgScore }
             }
 
             val averageScores = allCategories.map { averagesMap[it.name] ?: 0.0 }
