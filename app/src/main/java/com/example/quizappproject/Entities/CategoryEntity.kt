@@ -1,4 +1,5 @@
 package com.example.quizappproject.Entities
+
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 

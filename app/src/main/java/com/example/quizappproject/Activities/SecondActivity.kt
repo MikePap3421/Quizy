@@ -133,6 +133,7 @@ class SecondActivity : AppCompatActivity() {
 
     private fun loadFragment(fragment: Fragment) {
         supportFragmentManager.beginTransaction()
+            .setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left)
             .replace(R.id.fragment_container, fragment)
             .commit()
     }
@@ -238,13 +239,31 @@ class SecondActivity : AppCompatActivity() {
     }
 
     fun updateDrawerHeaderNameFromPrefs() {
-        val sharedPrefs = getSharedPreferences("UserPrefs", MODE_PRIVATE)
-        val name = sharedPrefs.getString("USERNAME_KEY", "Guest")
-        val navView = findViewById<NavigationView>(R.id.top_nav_view)
-        val headerView = navView.getHeaderView(0)
-        val tvUserName = headerView.findViewById<TextView>(R.id.textView5)
-        tvUserName.text = name
+        val sessionPrefs = getSharedPreferences("user_session", MODE_PRIVATE)
+        val email = sessionPrefs.getString("USER_EMAIL", null)
+
+        if (email != null) {
+            lifecycleScope.launch {
+                val userDao = AppDatabase.getDatabase(applicationContext).userDao()
+                val user = userDao.getUserByEmail(email)
+                user?.let {
+                    val navView = findViewById<NavigationView>(R.id.top_nav_view)
+                    val headerView = navView.getHeaderView(0)
+                    val tvUserName = headerView.findViewById<TextView>(R.id.textView5)
+                    val userIcon = findViewById<TextView>(R.id.userIcon)
+
+                    tvUserName.text = it.name
+                    userIcon.text = it.name.firstOrNull()?.uppercaseChar()?.toString() ?: "?"
+                }
+            }
+        }
     }
+
+    override fun onResume() {
+        super.onResume()
+        updateDrawerHeaderNameFromPrefs()
+    }
+
 
 
 }

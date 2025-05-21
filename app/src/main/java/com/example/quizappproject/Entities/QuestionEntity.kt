@@ -6,8 +6,7 @@ import androidx.room.*
 
 @Entity(
     tableName = "questions",
-    foreignKeys = [
-        ForeignKey(
+    foreignKeys = [ForeignKey(
             entity = CategoryEntity::class,
             parentColumns = ["name"],
             childColumns = ["categoryName"],

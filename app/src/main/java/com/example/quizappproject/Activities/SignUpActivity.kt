@@ -5,11 +5,9 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.ViewModelProvider
-import com.example.quizappproject.Activities.MainActivity
 import com.example.quizappproject.AppDatabase
 import com.example.quizappproject.Entities.UserEntity
 import com.example.quizappproject.R

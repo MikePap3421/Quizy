@@ -1,7 +1,7 @@
 package com.example.quizappproject.Dao
+
 import androidx.room.*
 import com.example.quizappproject.Entities.CategoryEntity
-
 
 @Dao
 interface CategoryDao {

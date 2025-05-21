@@ -5,7 +5,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.annotation.OptIn
-import androidx.media3.common.util.Log
 import androidx.media3.common.util.UnstableApi
 import androidx.recyclerview.widget.RecyclerView
 import com.example.quizappproject.Category
@@ -32,15 +31,12 @@ class ProfileCategoryAdapter(
         val category = categories[position]
         val avg = averageScores.getOrNull(position) ?: 0.0
 
-        Log.d("ProfileCategoryAdapter", "onBindViewHolder called for position $position: Category=${category.name}, Avg=$avg")
-
         holder.name.text = category.name
         holder.average.text = "Avg: %.2f".format(avg)
     }
 
     @OptIn(UnstableApi::class)
     override fun getItemCount(): Int {
-        Log.d("ProfileCategoryAdapter", "getItemCount() returns: ${categories.size}")
         return categories.size
     }
 
